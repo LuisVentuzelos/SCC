@@ -1,2 +1,2 @@
-# PCAInfra
-Infrastructure for IPCA
+# SCC
+Infrastructure for SCC
