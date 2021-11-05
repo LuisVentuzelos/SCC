@@ -1,0 +1,23 @@
+{
+  "name": "scc",
+  "version": "1.0.0",
+  "description": "Infrastructure for SCC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisVentuzelos/SCC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuisVentuzelos/SCC/issues"
+  },
+  "homepage": "https://github.com/LuisVentuzelos/SCC#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
