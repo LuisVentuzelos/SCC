@@ -6,6 +6,7 @@ services:
       - "8080:3000"
     depends_on:
       - db
+
   db:
     env_file:
       - .env
@@ -15,3 +16,10 @@ services:
       - "5432:27017"
     volumes: 
       - ./data/db:/data/db
+
+  mongo-seed:
+    build: ./data/mock
+    env_file:
+      - .env
+    links:
+      - db
