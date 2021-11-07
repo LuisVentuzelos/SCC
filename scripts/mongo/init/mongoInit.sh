@@ -1,0 +1,1 @@
+mongo --eval "db = connect('localhost:27017/admin');db.auth('$MONGO_INITDB_ROOT_USERNAME', '$MONGO_INITDB_ROOT_PASSWORD');db = db.getSiblingDB('$DB_NAME');db.createUser({ user: '$APP_USER', pwd: '$APP_PWD',roles: [{ role: 'dbOwner', db: '$DB_NAME' }]});db.createCollection('$DB_COLLECTION_NAME')"

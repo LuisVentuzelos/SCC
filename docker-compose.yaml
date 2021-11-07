@@ -8,18 +8,14 @@ services:
       - db
 
   db:
-    env_file:
-      - .env
     image: "mongo"
     restart: always
     ports:
       - "5432:27017"
-    volumes: 
-      - ./data/db:/data/db
-
-  mongo-seed:
-    build: ./data/mock
     env_file:
       - .env
-    links:
-      - db
+    volumes: 
+      - ./scripts/mongo/init/:/docker-entrypoint-initdb.d
+      - ./scripts/mongo/init:/home/mongodb
+      - ./scripts/mongo/seed/:/home/mongodb/seed
+      - ./data/db:/data/db
