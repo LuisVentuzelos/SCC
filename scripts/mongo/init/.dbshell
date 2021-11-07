@@ -1,7 +1,0 @@
-var rootUser = 'sa';
-var rootPassword = 'Pwd12345!';
-var user = 'appUser';
-var passwd = 'Pwd12345!';
-var db = 'test';
-var admin = db.getSiblingDB(db);
-EOF

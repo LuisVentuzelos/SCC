@@ -106,4 +106,4 @@ dist
 data/db
 
 #mongo db cache
-.dbshell
+scripts/mongo/init/.dbshell
