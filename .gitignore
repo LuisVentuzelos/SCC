@@ -104,3 +104,6 @@ dist
 
 #remove data/db
 data/db
+
+#mongo db cache
+.dbshell
