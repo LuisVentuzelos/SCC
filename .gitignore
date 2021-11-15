@@ -107,3 +107,4 @@ data/db
 
 #mongo db cache
 scripts/mongo/init/.dbshell
+.DS_Store
