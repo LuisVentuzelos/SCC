@@ -4,8 +4,14 @@ services:
     build: .
     ports:
       - "8080:3000"
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://sa:Pwd12345%21@db:27017/?serverSelectionTimeoutMS=10000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256
     depends_on:
       - db
+    networks:
+      - docker_network
 
   db:
     image: "mongo"
@@ -19,3 +25,10 @@ services:
       - ./scripts/mongo/init:/home/mongodb
       - ./scripts/mongo/seed/:/home/mongodb/seed
       - ./data/db:/data/db
+    networks:
+      - docker_network
+
+networks:
+  docker_network:
+    driver: bridge
+    
