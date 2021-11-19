@@ -32,7 +32,8 @@ app.post("/register", async (req, res) => {
         return res.status(409).send("User Already Exist. Please Login");
       });
 
-    encryptedPassword = await bcrypt.hash(password, 10);
+    //Encrypt user password
+    let encryptedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       user_name,
