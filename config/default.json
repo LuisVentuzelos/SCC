@@ -1,0 +1,11 @@
+{
+    "database": {
+        "users_collection": "users"
+    },
+    "token": {
+        "expireIn": "2h"
+    },
+    "server": {
+        "port": 3000
+    }
+}

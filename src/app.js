@@ -1,20 +1,21 @@
 require("dotenv").config();
-require("./config/database").connect();
+require("./data/database").connect();
 
-const User = require("./model/user");
+const userModel = require("./model/user");
 const auth = require("./middleware/auth");
 
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
+const config = require('config');
+const tokenExpirationTime = config.token.expireIn;
+
 const express = require('express')
 const app = express()
 
-const port = 3000
-
 app.use(express.json());
 
-app.get("/welcome", auth, (req, res) => {
+app.get("/welcome", auth, (res) => {
   res.status(200).send("Welcome to Viter ");
 });
 
@@ -27,7 +28,7 @@ app.post("/register", async (req, res) => {
       res.status(400).send("All fields are required");
     }
 
-    User.findOne({ email }).then((response) => {
+    userModel.findOne({ email }).then((response) => {
       if (response)
         return res.status(409).send("User Already Exist. Please Login");
       });
@@ -35,7 +36,7 @@ app.post("/register", async (req, res) => {
     //Encrypt user password
     let encryptedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    const user = await userModel.create({
       user_name,
       email: email.toLowerCase(),
       password: encryptedPassword,
@@ -45,7 +46,7 @@ app.post("/register", async (req, res) => {
       { user_id: user._id, email },
       process.env.TOKEN_KEY,
       {
-        expiresIn: "2h",
+        expiresIn: tokenExpirationTime,
       }
     );
     user.token = token;
@@ -65,7 +66,7 @@ app.post("/login", async (req, res) => {
     if (!(email && password)) {
       res.status(400).send("All input is required");
     }
-    const user = await User.findOne({ email });
+    const user = await userModel.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
