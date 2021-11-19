@@ -39,7 +39,7 @@ app.post("/register", async (req, res) => {
     }
 
     //Encrypt user password
-    encryptedPassword = await bcrypt.hash(password, 10);
+    let encryptedPassword = await bcrypt.hash(password, 10);
 
     // Create user in our database
     const user = await User.create({
