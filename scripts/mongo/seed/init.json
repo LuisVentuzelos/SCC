@@ -1,15 +1,18 @@
 [
     {
       "name": "Joe Smith",
-      "email": "jsmith@gmail.com",
-      "age": 40,
-      "admin": false
+      "email": "smith@gmail.com",
+      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
     },
     {
       "name": "Jen Ford",
       "email": "jford@gmail.com",
-      "age": 45,
-      "admin": true
+      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
+    },
+    {
+      "name": "John Doe",
+      "email": "jDoe@hotmail.com",
+      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
     }
-  ]
+]
   
