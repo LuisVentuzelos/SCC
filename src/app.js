@@ -24,14 +24,13 @@ app.post("/register", async (req, res) => {
     const { user_name, email, password } = req.body;
 
     if (!(email && password && user_name)) {
-      res.status(400).send("All input is required");
+      res.status(400).send("All fields are required");
     }
 
-    const oldUser = await User.findOne({ email });
-
-    if (oldUser) {
-      return res.status(409).send("User Already Exist. Please Login");
-    }
+    User.findOne({ email }).then((response) => {
+      if (response)
+        return res.status(409).send("User Already Exist. Please Login");
+      });
 
     encryptedPassword = await bcrypt.hash(password, 10);
 
