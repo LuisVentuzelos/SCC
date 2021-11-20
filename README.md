@@ -1,6 +1,20 @@
 # SCC
 Infrastructure for SCC
 
+# Run API
+
+## Start
+npm run start
+
+## Dev
+npm run dev
+
+## Linter
+npm run lint
+
+## Linter Fix 
+npm run lint-fix
+
 # Docker Compose
 ## Docker compose build
 docker-compose build
