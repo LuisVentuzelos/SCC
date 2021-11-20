@@ -4,6 +4,8 @@
   "description": "Infrastructure for SCC",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .  --ext .js",
+    "lint-fix": "eslint --fix .  --ext .js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
@@ -20,12 +22,15 @@
   "homepage": "https://github.com/LuisVentuzelos/SCC#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "config": "^3.3.6",
     "dotenv": "^10.0.0",
+    "eslint-config-airbnb": "^19.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13"
   },
   "devDependencies": {
+    "eslint": "^8.2.0",
     "nodemon": "^2.0.15"
   }
 }
