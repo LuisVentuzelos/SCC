@@ -1,5 +1,5 @@
-# SCC
-Infrastructure for SCC
+# Viter API
+Viter API is a RESTful API for managing the Viter App.
 
 # Getting Started
 
