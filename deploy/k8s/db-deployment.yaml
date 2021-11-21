@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.24.0 (4a2a0458)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.24.0 (4a2a0458)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/viternetwork: "true"
+        io.kompose.service: db
+    spec:
+      containers:
+        - env:
+            - name: APP_PWD
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_PWD
+                  name: env
+            - name: APP_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_USER
+                  name: env
+            - name: DB_COLLECTION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_COLLECTION_NAME
+                  name: env
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: env
+            - name: MONGO_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_HOSTNAME
+                  name: env
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: env
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: env
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_PORT
+                  name: env
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_URI
+                  name: env
+            - name: TOKEN_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: TOKEN_KEY
+                  name: env
+          image: mongo
+          name: db
+          ports:
+            - containerPort: 27017
+          resources: {}
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: db-claim0
+            - mountPath: /home/mongodb
+              name: db-claim1
+            - mountPath: /home/mongodb/seed
+              name: db-claim2
+            - mountPath: /data/db
+              name: db-claim3
+      restartPolicy: Always
+      volumes:
+        - name: db-claim0
+          persistentVolumeClaim:
+            claimName: db-claim0
+        - name: db-claim1
+          persistentVolumeClaim:
+            claimName: db-claim1
+        - name: db-claim2
+          persistentVolumeClaim:
+            claimName: db-claim2
+        - name: db-claim3
+          persistentVolumeClaim:
+            claimName: db-claim3
+status: {}
