@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3"
 services:
   api:
     build: .
@@ -6,12 +6,10 @@ services:
       - "8080:3000"
     env_file:
       - .env
-    environment:
-      - MONGO_URI=mongodb://appUser:Pwd12345%21@db:27017/viter?serverSelectionTimeoutMS=50000&connectTimeoutMS=10000&authSource=viter&authMechanism=SCRAM-SHA-256
     depends_on:
       - db
     networks:
-      - docker_network
+      - viternetwork
 
   db:
     image: "mongo"
@@ -26,9 +24,9 @@ services:
       - ./scripts/mongo/seed/:/home/mongodb/seed
       - ./data/db:/data/db
     networks:
-      - docker_network
+      - viternetwork
 
 networks:
-  docker_network:
+  viternetwork:
     driver: bridge
     
