@@ -14,5 +14,5 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: api-env
+    viter.service: api-env
   name: env
