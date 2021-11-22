@@ -73,3 +73,11 @@ minikube dasboard
 ### Minikube expose services
 minikube service --url db
 minikube service --url api
+
+### Minikube delete all
+minikube delete --all
+
+### Minikube and kubectl full deployment
+minikube start
+kubectl apply -f deploy/k8s/
+minikube dasboard
