@@ -161,7 +161,7 @@ app.get('/:id', auth, function(req, res){
 
     const user = await userModel.findById(req.params.id)
     if (!user) return res.status(401).json({ message: 'User not found' });
-    return user;
+    return res.status(200).json(user)
 
   }catch (err) {
     console.log(err)
