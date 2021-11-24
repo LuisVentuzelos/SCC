@@ -90,7 +90,7 @@ app.post('/login', async (req, res) => {
   }
 })
 
-app.post('/refreshToken', function(req, res){
+app.post('/refreshToken', async (req, res) =>{
   try {
     const { email, refreshToken } = req.body
 
@@ -125,7 +125,7 @@ app.post('/refreshToken', function(req, res){
   }
 })
 
-app.post('/revoke', auth, function(req, res){
+app.post('/revoke', auth, async (req, res) =>{
   try {
     if (req.user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
@@ -139,7 +139,7 @@ app.post('/revoke', auth, function(req, res){
   }
 })
 
-app.post('/revokeAll', auth, function(req, res){
+app.post('/revokeAll', auth, async (req, res) =>{
   try {
     if (req.user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
@@ -153,7 +153,7 @@ app.post('/revokeAll', auth, function(req, res){
   }
 })
 
-app.get('/:id', auth, function(req, res){
+app.get('/:id', auth, async (req, res) =>{
   try {
     if (req.params.id !== req.user.id && req.user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
