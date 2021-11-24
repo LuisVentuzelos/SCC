@@ -24,7 +24,7 @@ app.get('/welcome', auth, (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
 
     if (!(email && password && name)) {
       res.status(400).send('All fields are required')
@@ -40,11 +40,12 @@ app.post('/register', async (req, res) => {
     const user = await userModel.create({
       name,
       email: email.toLowerCase(),
-      password: encryptedPassword
+      password: encryptedPassword,
+      role: role
     })
 
     const token = jwt.sign(
-      { user_id: user._id, email, role },
+      { user_id: user._id, email },
       process.env.TOKEN_KEY,
       {
         expiresIn: tokenExpirationTime
@@ -70,7 +71,7 @@ app.post('/login', async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
-        { user_id: user._id, email, role },
+        { user_id: user._id, email},
         process.env.TOKEN_KEY,
         {
           expiresIn: tokenExpirationTime
@@ -90,7 +91,7 @@ app.post('/login', async (req, res) => {
   }
 })
 
-app.post('/refreshToken', async (req, res) =>{
+app.post('/refreshToken', async (req, res) => {
   try {
     const { email, refreshToken } = req.body
 
@@ -105,7 +106,7 @@ app.post('/refreshToken', async (req, res) =>{
         return res.status(401).json({ message: 'Unauthorized' });
       }
       const token = jwt.sign(
-        { user_id: user._id, email, role },
+        { user_id: user._id, email},
         process.env.TOKEN_KEY,
         {
           expiresIn: tokenExpirationTime
@@ -125,9 +126,12 @@ app.post('/refreshToken', async (req, res) =>{
   }
 })
 
-app.post('/revoke', auth, async (req, res) =>{
+app.post('/revoke', auth, async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     if(refreshToken in refreshTokensUsed){
@@ -139,9 +143,12 @@ app.post('/revoke', auth, async (req, res) =>{
   }
 })
 
-app.post('/revokeAll', auth, async (req, res) =>{
+app.post('/revokeAll', auth, async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     for(var refreshToken in refreshTokensUsed){
@@ -155,11 +162,13 @@ app.post('/revokeAll', auth, async (req, res) =>{
 
 app.get('/:id', auth, async (req, res) =>{
   try {
-    if (req.params.id !== req.user.id && req.user.role !== "admin") {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (req.params.id !== user.id && user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const user = await userModel.findById(req.params.id)
     if (!user) return res.status(401).json({ message: 'User not found' });
     return res.status(200).json(user)
 
