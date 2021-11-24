@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .  --ext .js",
     "lint-fix": "eslint --fix .  --ext .js",
-    "test": "mocha src/test/**/*.js --exit",
+    "test": "mocha test/**/*.js --exit",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
