@@ -5,12 +5,14 @@ const express = require('express')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const randToken = require('rand-token')
 
 const config = require('config')
 const auth = require('./middleware/auth')
 const userModel = require('./model/user')
 
 const tokenExpirationTime = config.token.expireIn
+var refreshTokensUsed = {}
 
 const app = express()
 
@@ -22,7 +24,7 @@ app.get('/welcome', auth, (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
 
     if (!(email && password && name)) {
       res.status(400).send('All fields are required')
@@ -38,7 +40,8 @@ app.post('/register', async (req, res) => {
     const user = await userModel.create({
       name,
       email: email.toLowerCase(),
-      password: encryptedPassword
+      password: encryptedPassword,
+      role: role
     })
 
     const token = jwt.sign(
@@ -68,14 +71,16 @@ app.post('/login', async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
-        { user_id: user._id, email },
+        { user_id: user._id, email},
         process.env.TOKEN_KEY,
         {
-          expiresIn: '2h'
+          expiresIn: tokenExpirationTime
         }
       )
-
+      var refreshToken = randToken.uid(256);
       user.token = token
+      user.refreshToken = refreshToken
+      refreshTokensUsed[refreshToken] = user.name
 
       return res.status(200).json(user)
     }
@@ -85,5 +90,91 @@ app.post('/login', async (req, res) => {
     console.log(err)
   }
 })
+
+app.post('/refreshToken', async (req, res) => {
+  try {
+    const { email, refreshToken } = req.body
+
+    if (!(email && refreshToken)) {
+      return res.status(400).send('Required data missing')
+    }
+
+    if((refreshToken in refreshTokensUsed) && (refreshTokensUsed[refreshToken] == email)){
+      const user = await userModel.findOne({ email })
+
+      if(user.role !== "admin"){
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+      const token = jwt.sign(
+        { user_id: user._id, email},
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: tokenExpirationTime
+        }
+      )
+
+      user.token = token
+      user.refreshToken = refreshToken
+      refreshTokensUsed[refreshToken] = user.name
+
+      return res.status(200).json(user)
+    }
+    res.status(400).send('Invalid data')
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+app.post('/revoke', auth, async (req, res) => {
+  try {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (user.role !== "admin") {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    if(refreshToken in refreshTokensUsed){
+      delete refreshTokensUsed[refreshToken]
+    }
+    res.status(200).send("Token revoked")
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.post('/revokeAll', auth, async (req, res) => {
+  try {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (user.role !== "admin") {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    for(var refreshToken in refreshTokensUsed){
+      delete refreshTokensUsed[refreshToken]
+    }
+    res.status(200).send("All tokens revoked");
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.get('/:id', auth, async (req, res) =>{
+  try {
+    const { token } = req.body
+    const user = await userModel.findOne({ token })
+    
+    if (req.params.id !== user.id && user.role !== "admin") {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if (!user) return res.status(401).json({ message: 'User not found' });
+    return res.status(200).json(user)
+
+  }catch (err) {
+    console.log(err)
+  }
+});
 
 module.exports = app

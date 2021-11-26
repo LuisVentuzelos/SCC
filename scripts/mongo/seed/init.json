@@ -2,17 +2,20 @@
     {
       "name": "Joe Smith",
       "email": "smith@gmail.com",
-      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
+      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu",
+      "role":"user"
     },
     {
       "name": "Jen Ford",
       "email": "jford@gmail.com",
-      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
+      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu",
+      "role":"user"
     },
     {
       "name": "John Doe",
       "email": "jDoe@hotmail.com",
-      "password": "$2a$10$FLlbUkQc5vhSnfCKq4KhheYCljy/TalnfSs3CJC.axTAdLNZo2Fdu"
+      "password": "$2a$10$mvxl9Aa6FvNowIjRHahLguw8LpxuGk/wDh5bRNSo8OiltJWRV1Z62",
+      "role":"admin"
     }
 ]
   
