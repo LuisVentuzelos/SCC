@@ -27,7 +27,7 @@ app.post('/register', async (req, res) => {
     const { name, email, password, role } = req.body
 
     if (!(email && password && name)) {
-      res.status(400).send('All fields are required')
+      return res.status(400).send('All fields are required')
     }
 
     userModel.findOne({ email }).then((response) => {
