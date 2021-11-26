@@ -1,5 +1,5 @@
 var should = require('should')
-const app = require('../../index')
+const app = require('../../src/app')
 var request = require('supertest')(app)
 
 var mockUser = {
