@@ -80,4 +80,14 @@ minikube delete --all
 ### Minikube and kubectl full deployment
 minikube start
 kubectl apply -f deploy/k8s/
-minikube dasboard
+minikube service --url api
+
+## Azure Kubernetes Cluster
+### Azure Deployment
+az login
+az aks get-credentials --resource-group DefaultResourceGroup-EUS --name viterCluster
+kubectl apply -f deploy/k8s/
+kubectl expose deployment api --type=LoadBalancer --name=viter-load-balancer
+
+### Azure Destroy Cluster
+az aks delete --resource-group DefaultResourceGroup-EUS --name viterCluster --no-wait
