@@ -5,7 +5,7 @@ metadata:
     viter.service: api
   name: api
 spec:
-  replicas: 4
+  replicas: 3
   selector:
     matchLabels:
       viter.service: api
