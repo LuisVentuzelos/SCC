@@ -80,7 +80,7 @@ app.post('/login', async (req, res) => {
       var refreshToken = randToken.uid(256);
       user.token = token
       user.refreshToken = refreshToken
-      refreshTokensUsed[refreshToken] = user.name
+      refreshTokensUsed[refreshToken] = email
 
       return res.status(200).json(user)
     }
@@ -89,6 +89,10 @@ app.post('/login', async (req, res) => {
   catch (err) {
     console.log(err)
   }
+})
+
+app.get('/tokens', auth, (req, res) => {
+  res.status(200).json(refreshTokensUsed)
 })
 
 app.post('/refreshToken', async (req, res) => {
@@ -114,8 +118,6 @@ app.post('/refreshToken', async (req, res) => {
       )
 
       user.token = token
-      user.refreshToken = refreshToken
-      refreshTokensUsed[refreshToken] = user.name
 
       return res.status(200).json(user)
     }
@@ -126,10 +128,10 @@ app.post('/refreshToken', async (req, res) => {
   }
 })
 
-app.post('/revoke', auth, async (req, res) => {
+app.post('/revoke', async (req, res) => {
   try {
-    const { token } = req.body
-    const user = await userModel.findOne({ token })
+    const { email, refreshToken } = req.body
+    const user = await userModel.findOne({ email })
     
     if (user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
@@ -143,10 +145,10 @@ app.post('/revoke', auth, async (req, res) => {
   }
 })
 
-app.post('/revokeAll', auth, async (req, res) => {
+app.post('/revokeAll', async (req, res) => {
   try {
-    const { token } = req.body
-    const user = await userModel.findOne({ token })
+    const { email } = req.body
+    const user = await userModel.findOne({ email })
     
     if (user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
@@ -162,15 +164,16 @@ app.post('/revokeAll', auth, async (req, res) => {
 
 app.get('/:id', auth, async (req, res) =>{
   try {
-    const { token } = req.body
-    const user = await userModel.findOne({ token })
+    const _id = req.params.id
+    const user = await userModel.findById(_id);
     
-    if (req.params.id !== user.id && user.role !== "admin") {
+    if (user.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
     if (!user) return res.status(401).json({ message: 'User not found' });
-    return res.status(200).json(user)
+    
+    res.status(200).json(user)
 
   }catch (err) {
     console.log(err)
