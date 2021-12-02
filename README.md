@@ -92,5 +92,7 @@ kubectl apply -f deploy/k8s/
 
 kubectl expose deployment api --type=LoadBalancer --name=viter-load-balancer
 
+kubectl get service
+
 ### Azure Destroy Cluster
 az aks delete --resource-group DefaultResourceGroup-EUS --name viterCluster --no-wait
