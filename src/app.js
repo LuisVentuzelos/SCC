@@ -82,7 +82,7 @@ app.post('/login', async (req, res) => {
       user.refreshToken = refreshToken
       refreshTokensUsed[refreshToken] = email
 
-      res.status(200).json(user)
+      return res.status(200).json(user)
     }
     res.status(400).send('Invalid Credentials')
   }
@@ -95,7 +95,7 @@ app.get('/tokens', auth, (req, res) => {
   res.status(200).json(refreshTokensUsed)
 })
 
-app.post('/refreshToken', auth,async (req, res) => {
+app.post('/refreshToken', async (req, res) => {
   try {
     const { email, refreshToken } = req.body
 
@@ -130,7 +130,8 @@ app.post('/refreshToken', auth,async (req, res) => {
 
 app.post('/revoke', auth,async (req, res) => {
   try {
-    const { email, refreshToken } = req.body
+    const { refreshToken } = req.body
+    const email = req.user.email;
     const user = await userModel.findOne({ email })
     
     if (user.role !== "admin") {
@@ -145,9 +146,9 @@ app.post('/revoke', auth,async (req, res) => {
   }
 })
 
-app.post('/revokeAll', auth,async (req, res) => {
+app.post('/revokeAll', auth, async (req, res) => {
   try {
-    const { email } = req.body
+    const email = req.user.email;
     const user = await userModel.findOne({ email })
     
     if (user.role !== "admin") {
@@ -164,10 +165,12 @@ app.post('/revokeAll', auth,async (req, res) => {
 
 app.get('/:id', auth, async (req, res) =>{
   try {
-    const _id = req.params.id
+    const _id = req.params.id;
+    const email = req.user.email;
     const user = await userModel.findById(_id);
+    const userAuth = await userModel.findOne({ email });
     
-    if (user.role !== "admin") {
+    if (userAuth.role !== "admin") {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
