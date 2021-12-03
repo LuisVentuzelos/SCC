@@ -68,7 +68,7 @@ minikube start
 minikube stop
 
 ### Minikube Dashboard
-minikube dasboard
+minikube dashboard
 
 ### Minikube expose services
 minikube service --url db
