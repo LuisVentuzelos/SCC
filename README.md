@@ -25,6 +25,7 @@ cd /home/mongodb/seed
 bash mongo_seed.sh
 
 ### Mock data in one command run 
+
 docker exec scc-db-1 bash -c 'cd /home/mongodb/seed ; bash mongo_seed.sh' 
 
 # Docker
