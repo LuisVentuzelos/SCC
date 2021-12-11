@@ -96,3 +96,4 @@ kubectl get service
 
 ### Azure Destroy Cluster
 az aks delete --resource-group DefaultResourceGroup-EUS --name viterCluster --no-wait
+
